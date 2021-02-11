@@ -27,25 +27,25 @@ import javafx.stage.Stage;
  * this class
  */
 public class GenWeights extends Application {
-	
+
 	/** The pane. */
 	private BorderPane pane = new BorderPane();
-    
-    /** The gp. */
-    private GridPane gp = new GridPane();
-    
-    /** The btn box. */
-    private HBox btnBox = new HBox(15);
-    
-    /** The file handles for input (inf) and output (outf) */
-    private File inf,outf;
-    
-    /** The weights - the # of occurences of each character with index 0-127. */
-    private int[] weights = new int[128]; 
-    
-    /** The boolean indicating if the weights array contains valid information. */
-    private boolean weightsValid = false;
-    
+
+	/** The gp. */
+	private GridPane gp = new GridPane();
+
+	/** The btn box. */
+	private HBox btnBox = new HBox(15);
+
+	/** The file handles for input (inf) and output (outf) */
+	private File inf,outf;
+
+	/** The weights - the # of occurences of each character with index 0-127. */
+	private int[] weights = new int[128]; 
+
+	/** The boolean indicating if the weights array contains valid information. */
+	private boolean weightsValid = false;
+
 	/**
 	 * Instantiates a new GenWeights object
 	 */
@@ -63,7 +63,7 @@ public class GenWeights extends Application {
 		}
 		weightsValid = false;
 	}
-	
+
 	/**
 	 * Start.
 	 *
@@ -92,20 +92,20 @@ public class GenWeights extends Application {
 		pane.setCenter(gp);
 		Button genWt = new Button("Generate");
 		Button save = new Button("Save To File");
-		
+
 		// TODO #1 create the setOnAction() events to handle button pushes.
 
-		
+
 		btnBox.setAlignment(Pos.CENTER);
 		btnBox.getChildren().addAll(genWt,save);
 		pane.setBottom(btnBox);
-		
+
 		Scene scene = new Scene(pane, 400,150);
 		primaryStage.setScene(scene);
 		primaryStage.show();
-		
+
 	}
-	
+
 	/**
 	 * Generate character-based frequency weights. You will write this method,
 	 * which must address the following cases:
@@ -132,9 +132,25 @@ public class GenWeights extends Application {
 	 */
 	private void generateWeights(String infName) {
 		// TODO #2: write this method and any helper methods
+		inf = new File(infName);
+
+		if(infName.isEmpty()) {
+			raiseGenerateWeightsAlert("a");
+			return;
+		}
+		else if(!inf.exists() || inf.length() == 0) {
+			raiseGenerateWeightsAlert("b");
+			return;
+		}
+		else if(!inf.canRead()) {
+			raiseGenerateWeightsAlert("c");
+			return;
+		}
+
+
 		return;	
 	}
-	
+
 	/**
 	 * Prints the weights to the console. Non-printing characters (0-31, 127) 
 	 * are indicated with [ ], printing characters are displayed to help with debug
@@ -148,7 +164,7 @@ public class GenWeights extends Application {
 				System.out.println("i:"+i+" ("+(char)i+") = "+weights[i]);
 		}
 	}
-	
+
 	/**
 	 * Write the character-based frequency data to the specified file, one index per line.
 	 * Use the following format:
@@ -172,13 +188,55 @@ public class GenWeights extends Application {
 		// TODO #3: write this method (and any helper methods)
 		return;
 	}
-	
+
+
 	//TODO #4: I strongly recommend writing reuseable alerts for input errors, output
 	//         errors, confirmation and information... You can supply the specific error
 	//         message as a string that is passed in. Write these methods here....
-	
-	
-	
+
+	private void raiseGenerateWeightsAlert(String s) {
+		switch(s){
+		case "a":
+			Alert a = new Alert(Alert.AlertType.WARNING);
+			a.setContentText("The input filename is blank.");
+			a.show();
+			break;
+		case "b":
+			Alert b = new Alert(Alert.AlertType.WARNING);
+			b.setContentText("The file does not exist");
+			b.show();
+			break;
+		case "c":
+			Alert c = new Alert(Alert.AlertType.WARNING);
+			c.setContentText("The file is not readable");
+			c.show();
+			break;
+		}
+	}
+	private void raiseSaveWeightsToFileAlerts(int i) {
+		switch(i) {
+		case 1:
+			Alert a = new Alert(Alert.AlertType.INFORMATION);
+			a.setContentText("The file has been created successfully.");
+			a.show();
+			break;
+		
+		case 2:
+			Alert b = new Alert(Alert.AlertType.WARNING);
+			b.setContentText("output file name is blank.");
+			b.show();
+			break;
+			
+		case 3:
+			Alert c = new Alert(Alert.AlertType.WARNING);
+    		c.setContentText("The file is not writable");
+    		c.show();
+    		break;
+    	//confirmation alert needs to be in the SaveWeightsToFile method, as it requires user intervention
+		}
+	}
+
+
 	/**
 	 * The main method.
 	 *
