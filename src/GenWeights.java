@@ -1,11 +1,14 @@
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javafx.application.Application;
 import javafx.geometry.Pos;
@@ -94,12 +97,17 @@ public class GenWeights extends Application {
 		pane.setCenter(gp);
 		Button genWt = new Button("Generate");
 		Button save = new Button("Save To File");
+		
+		// TODO #1 create the setOnAction() events to handle button pushes.
 		genWt.setOnAction(e -> {
 			initWeights();
 			generateWeights(inputFile.getText());
 		});
-
-		// TODO #1 create the setOnAction() events to handle button pushes.
+		
+		save.setOnAction(e -> {
+			saveWeightsToFile(outputFile.getText());
+		});
+		
 
 
 		btnBox.setAlignment(Pos.CENTER);
@@ -221,6 +229,10 @@ public class GenWeights extends Application {
 		if(alert.getResult() == ButtonType.NO){
 			return;
 		}
+		else {
+			writeOutputToFile(outfName);
+		}
+		
 		
 		
 		
@@ -229,8 +241,19 @@ public class GenWeights extends Application {
 		return;
 	}
 	
-	private void writeOutputToFile() {
-		
+	private void writeOutputToFile(String outfName) {
+		try {
+			PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(outfName)));
+			for(int i = 0; i < weights.length; i++) {
+				String str = i+","+weights[i];
+				out.println(str);
+			}
+			out.flush();
+			out.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	//TODO #4: I strongly recommend writing reuseable alerts for input errors, output
