@@ -2,6 +2,7 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -12,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
@@ -92,6 +94,10 @@ public class GenWeights extends Application {
 		pane.setCenter(gp);
 		Button genWt = new Button("Generate");
 		Button save = new Button("Save To File");
+		genWt.setOnAction(e -> {
+			initWeights();
+			generateWeights(inputFile.getText());
+		});
 
 		// TODO #1 create the setOnAction() events to handle button pushes.
 
@@ -146,8 +152,20 @@ public class GenWeights extends Application {
 			raiseGenerateWeightsAlert("c");
 			return;
 		}
+		try (BufferedReader br = new BufferedReader(new FileReader(inf))) {
+			int i;
+			while((i = br.read()) != -1) {
+				i = i&0x7f;
+				weights[i]++;
+			}
+		} catch (IOException e) { 
+
+			e.printStackTrace();
+		}
 
 
+
+		printWeights();
 		return;	
 	}
 
@@ -185,10 +203,35 @@ public class GenWeights extends Application {
 	 * @param outfName the outf name
 	 */
 	private void saveWeightsToFile(String outfName) {
-		// TODO #3: write this method (and any helper methods)
+		if(outfName.isEmpty()) {
+			raiseSaveWeightsToFileAlerts(2);
+			return;
+		}
+		else if(!inf.exists() || inf.length() == 0) {
+			raiseSaveWeightsToFileAlerts(3);
+			return;
+		}
+		else if(!inf.canWrite()) {
+			raiseSaveWeightsToFileAlerts(4);
+			return;
+		}
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		alert.setContentText("The file is writable, confirm to proceed.");
+		alert.show();
+		if(alert.getResult() == ButtonType.NO){
+			return;
+		}
+		
+		
+		
+
+
 		return;
 	}
-
+	
+	private void writeOutputToFile() {
+		
+	}
 
 	//TODO #4: I strongly recommend writing reuseable alerts for input errors, output
 	//         errors, confirmation and information... You can supply the specific error
@@ -217,22 +260,26 @@ public class GenWeights extends Application {
 		switch(i) {
 		case 1:
 			Alert a = new Alert(Alert.AlertType.INFORMATION);
-			a.setContentText("The file has been created successfully.");
+			a.setContentText("The file has been written successfully.");
 			a.show();
 			break;
-		
+
 		case 2:
 			Alert b = new Alert(Alert.AlertType.WARNING);
 			b.setContentText("output file name is blank.");
 			b.show();
 			break;
-			
 		case 3:
 			Alert c = new Alert(Alert.AlertType.WARNING);
-    		c.setContentText("The file is not writable");
-    		c.show();
-    		break;
-    	//confirmation alert needs to be in the SaveWeightsToFile method, as it requires user intervention
+			c.setContentText("output file does not exist");
+			c.show();
+
+		case 4:
+			Alert d = new Alert(Alert.AlertType.WARNING);
+			d.setContentText("The file is not writable");
+			d.show();
+			break;
+		
 		}
 	}
 
