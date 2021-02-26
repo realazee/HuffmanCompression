@@ -35,10 +35,10 @@ public class HuffmanCompressionUtilities {
 	public HuffmanCompressionUtilities() {
 		queue = new PriorityQueue<HuffmanTreeNode>(root.compareWeightOrd);  //Not sure if this is correct.
 		root = null;
+		encodeMap = new String[8];
+		str = "";
+		weights = new int[128];
 		
-		//TODO: 
-		// Initialize Priority Queue with an appropriate comparator)
-		// Initialize root to null, and all other private variables
 	}
 	
 	/**
@@ -89,7 +89,7 @@ public class HuffmanCompressionUtilities {
 	 * @param weights the new weights
 	 */
 	public void setWeights(int[] weights) {
-		//TODO - write this method
+		weights = this.weights;
 	
 	}
 	
@@ -222,7 +222,19 @@ public class HuffmanCompressionUtilities {
 	 */
 	public byte decodeString(String[] binStr) {
 		//TODO - write this method
-		return -1; // remove when completed.
+		if(binStr.length == 0) {
+			return -1;
+		}
+		String[] backup = binStr;
+		byte result = traverseTree(root, binStr);
+		if(result == -1) {
+			binStr = backup;
+			return -1;
+		}
+		else {
+			return result;
+		}
+		
 	}
 		
 	/**
