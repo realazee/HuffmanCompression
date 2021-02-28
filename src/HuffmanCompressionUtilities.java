@@ -79,8 +79,16 @@ public class HuffmanCompressionUtilities {
 	 *     index 0 (the EOF character) to the queue
 	 */
 	void initializeHuffmanQueue(boolean minimize) {
-		//TODO - write this method
-		
+		for(int i = 0; i < weights.length; i++) {
+			if(!minimize) {
+				queue.add(new HuffmanTreeNode(i, weights[i]));
+			}
+			else {
+				if(weights[i] != 0) {
+					queue.add(new HuffmanTreeNode(i, weights[i]));
+				}
+			}
+		}
 	}
 	
 	/**
@@ -114,7 +122,20 @@ public class HuffmanCompressionUtilities {
 	 */
 	public void buildHuffmanTree(boolean minimize) {
 		HuffmanTreeNode left, right;
-		//TODO: write this method
+		root = null;
+		encodeMap = new String[128];
+	
+		initializeHuffmanQueue(minimize);
+		while(queue.isEmpty() == false) {
+			left = queue.remove();
+			if(queue.isEmpty()) {
+				root = left;
+				return;
+			}
+			right = queue.remove();
+			//create and add to queue now
+			
+		}
 		
 	}
 	

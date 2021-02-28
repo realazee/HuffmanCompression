@@ -20,6 +20,9 @@ public class HuffmanTreeNode {
 
 	/** The right. */
 	private HuffmanTreeNode right;
+	private static int ID = 0;
+	private int id;
+	
 
 	/**
 	 * Instantiates a new huffman tree node. This constructor is used to generate unconnected leaf 
@@ -34,6 +37,8 @@ public class HuffmanTreeNode {
 		this.charValue = (char) ordValue;
 		left = null;
 		right = null;
+		id = ID;
+		ID++;
 	}
 
 	/**
@@ -52,6 +57,8 @@ public class HuffmanTreeNode {
 		this.charValue = 0;
 		this.left = left;
 		this.right = right;
+		id = ID;
+		ID++;
 	}
 
 	/**
@@ -163,12 +170,20 @@ public class HuffmanTreeNode {
 			else if(ht1.weight > ht2.weight) {
 				return 1;
 			}
-			else {
+			else if(ht1.weight == ht2.weight){
 				if(ht1.ordValue < ht2.ordValue){
 					return -1;
 				}
 				else {
 					return 1;
+				}
+			}
+			else {
+				if(ht1.id > ht2.id) {
+					return 1;
+				}
+				else {
+					return -1;
 				}
 			}
 		}
