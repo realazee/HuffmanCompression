@@ -60,6 +60,14 @@ public class HuffmanTreeNode {
 		id = ID;
 		ID++;
 	}
+	
+	public int getId() {
+		return ID;
+	}
+	
+	public void setId() {
+		this.id = id;
+	}
 
 	/**
 	 * Gets the weight.

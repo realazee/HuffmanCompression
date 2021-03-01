@@ -66,6 +66,7 @@ public class EncodeDecode {
 	 * @param optimize the optimize
 	 */
 	void encode(String fName,String bfName, String freqWts, boolean optimize) {
+		
 	}
 	
 	/**

@@ -1,12 +1,16 @@
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Scanner;
+import java.util.Queue;
+import java.util.LinkedList;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -58,7 +62,18 @@ public class HuffmanCompressionUtilities {
 	public String[] getEncodeMap() {
 		return encodeMap;
 	}
-	
+	void dumpQueue(String msg) {
+		   System.out.println(msg);
+		   HuffmanTreeNode node;
+		   Queue<HuffmanTreeNode> saveQ = new LinkedList<HuffmanTreeNode>();
+		   while (!queue.isEmpty()) {
+		      node = queue.remove();
+		      saveQ.add(node);
+		      System.out.println("   wt:"+node.getWeight()+"  ord=" +node.getOrdValue()+"  id="+node.getId());
+		   }
+		   while (!saveQ.isEmpty())
+		       queue.add(saveQ.remove());
+		}
 	/**
 	 * Read freq weights from a file in the output/ directory
 	 * You can assume that this file has already been error checked.
@@ -67,8 +82,31 @@ public class HuffmanCompressionUtilities {
 	 * @return the int[]
 	 */
 	public int[] readFreqWeights(File inf) {
-		//TODO - write this method
-		return null; // remove this when written
+		File outputFile = new File("output/" + inf);
+        FileReader reader = null;
+        try {
+            reader = new FileReader(outputFile);
+        } catch (FileNotFoundException e3) {
+            return null;
+        }
+        BufferedReader br = new BufferedReader(reader);
+        for(int i = 0; i < 128; i++) {
+        	try {
+        		String temp = br.readLine();
+        		
+        		try {
+        			int weight = Integer.parseInt(temp.substring(temp.indexOf(",")+i));
+        			weights[i] = weight;
+        		}
+        		catch(NumberFormatException e) {
+        			return null;
+        		}
+        	}
+        	catch(IOException e) {
+        		break;
+        	}
+        }
+		return weights; 
 	}			
 
 	/**
@@ -134,7 +172,8 @@ public class HuffmanCompressionUtilities {
 			}
 			right = queue.remove();
 			//create and add to queue now
-			
+			int tempWeight= left.getWeight() + right.getWeight();
+			queue.add(new HuffmanTreeNode(tempWeight, left, right));
 		}
 		
 	}
