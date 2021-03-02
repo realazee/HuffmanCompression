@@ -81,6 +81,7 @@ public class HuffmanCompressionUtilities {
 	 * @param inf the inf
 	 * @return the int[]
 	 */
+	
 	public int[] readFreqWeights(File inf) {
 		File outputFile = new File("output/" + inf);
         FileReader reader = null;
@@ -164,6 +165,7 @@ public class HuffmanCompressionUtilities {
 		encodeMap = new String[128];
 	
 		initializeHuffmanQueue(minimize);
+		dumpQueue("Dumping the Queue");
 		while(queue.isEmpty() == false) {
 			left = queue.remove();
 			if(queue.isEmpty()) {
@@ -206,7 +208,23 @@ public class HuffmanCompressionUtilities {
 	 * @param level the level
 	 */
 	public void createHuffmanCodes(HuffmanTreeNode node, String code, int level) {
-		//TODO: write this method
+		encodeMap = new String[128];
+		if(root != null) {
+			recursiveCreate(root, "", 0);
+		}
+	}
+	public void recursiveCreate(HuffmanTreeNode node, String code, int level) {
+		if(node.isLeaf()) { //base case
+			encodeMap[node.getOrdValue()] = code;
+			
+		}
+		if(node.getLeft() != null) {
+			recursiveCreate(node.getLeft(), code+"0", level+1);
+		}
+		if(node.getLeft() != null) {
+			recursiveCreate(node.getRight(), code+"1", level+1);
+		}
+		
 	}
 	
 	/**

@@ -125,5 +125,39 @@ public class EncodeDecodeGUI extends Application {
 	}
 	
 	//TODO: provide any necessary alerts to the user here...
+	public void alert(String s) {
+		switch(s){
+		case "a":
+			Alert a = new Alert(Alert.AlertType.WARNING);
+			a.setContentText("The input filename is blank.");
+			a.show();
+			break;
+		case "b":
+			Alert b = new Alert(Alert.AlertType.WARNING);
+			b.setContentText("The input file does not exist");
+			b.show();
+			break;
+		case "c":
+			Alert c = new Alert(Alert.AlertType.WARNING);
+			c.setContentText("The input file is not readable");
+			c.show();
+			break;
+		case "d":
+			Alert d = new Alert(Alert.AlertType.WARNING);
+			d.setContentText("output file name is blank.");
+			d.show();
+			break;
+		case "e":
+			Alert e = new Alert(Alert.AlertType.WARNING);
+			e.setContentText("output file does not exist");
+			e.show();
 
+		case "f":
+			Alert f = new Alert(Alert.AlertType.WARNING);
+			f.setContentText("The output file is not writable");
+			f.show();
+			break;
+			
+		}
+	}
 }

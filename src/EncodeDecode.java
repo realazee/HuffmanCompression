@@ -66,7 +66,21 @@ public class EncodeDecode {
 	 * @param optimize the optimize
 	 */
 	void encode(String fName,String bfName, String freqWts, boolean optimize) {
+		File inFile = new File(fName);
 		
+
+		if(fName.isEmpty()) {
+			gui.alert("a");
+			return;
+		}
+		else if(!inFile.exists() || fName.length() == 0) {
+			gui.alert("b");
+			return;
+		}
+		else if(!inFile.canRead()) {
+			gui.alert("c");
+			return;
+		}
 	}
 	
 	/**
