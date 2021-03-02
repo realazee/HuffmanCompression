@@ -62,7 +62,7 @@ public class HuffmanTreeNode {
 	}
 	
 	public int getId() {
-		return ID;
+		return id;
 	}
 	
 	public void setId() {
@@ -182,18 +182,20 @@ public class HuffmanTreeNode {
 				if(ht1.ordValue < ht2.ordValue){
 					return -1;
 				}
-				else {
-					return 1;
-				}
-			}
-			else {
-				if(ht1.id > ht2.id) {
+				else if(ht1.ordValue > ht2.ordValue) {
 					return 1;
 				}
 				else {
-					return -1;
+					if(ht1.id > ht2.id) {
+						return 1;
+					}
+					else {
+						return -1;
+					}
 				}
 			}
+			return 0;
+			
 		}
 	};
 

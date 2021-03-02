@@ -17,19 +17,19 @@ import java.util.LinkedList;
  * The Class HuffmanCompressionUtilities.
  */
 public class HuffmanCompressionUtilities {
-	
+
 	/** The queue. */
 	private PriorityQueue<HuffmanTreeNode> queue;
-	
+
 	/** The root. */
 	private HuffmanTreeNode root;
-	
+
 	/** The encode map - this will map a character to the bit string that will replace it */
 	private String[] encodeMap;
-	
+
 	/** The str. This is used to print the tree structure for testing purposes */
 	private String str;
-	
+
 	/** The frequency weights. */
 	private int[] weights;
 
@@ -42,9 +42,9 @@ public class HuffmanCompressionUtilities {
 		encodeMap = new String[8];
 		str = "";
 		weights = new int[128];
-		
+
 	}
-	
+
 	/**
 	 * Gets the tree root.
 	 *
@@ -53,7 +53,7 @@ public class HuffmanCompressionUtilities {
 	public HuffmanTreeNode getTreeRoot() {
 		return root;
 	}
-	
+
 	/**
 	 * Gets the encode map.
 	 *
@@ -63,17 +63,17 @@ public class HuffmanCompressionUtilities {
 		return encodeMap;
 	}
 	void dumpQueue(String msg) {
-		   System.out.println(msg);
-		   HuffmanTreeNode node;
-		   Queue<HuffmanTreeNode> saveQ = new LinkedList<HuffmanTreeNode>();
-		   while (!queue.isEmpty()) {
-		      node = queue.remove();
-		      saveQ.add(node);
-		      System.out.println("   wt:"+node.getWeight()+"  ord=" +node.getOrdValue()+"  id="+node.getId());
-		   }
-		   while (!saveQ.isEmpty())
-		       queue.add(saveQ.remove());
+		System.out.println(msg);
+		HuffmanTreeNode node;
+		Queue<HuffmanTreeNode> saveQ = new LinkedList<HuffmanTreeNode>();
+		while (!queue.isEmpty()) {
+			node = queue.remove();
+			saveQ.add(node);
+			System.out.println("   wt:"+node.getWeight()+"  ord=" +node.getOrdValue()+"  id="+node.getId());
 		}
+		while (!saveQ.isEmpty())
+			queue.add(saveQ.remove());
+	}
 	/**
 	 * Read freq weights from a file in the output/ directory
 	 * You can assume that this file has already been error checked.
@@ -81,32 +81,32 @@ public class HuffmanCompressionUtilities {
 	 * @param inf the inf
 	 * @return the int[]
 	 */
-	
+
 	public int[] readFreqWeights(File inf) {
 		File outputFile = new File("output/" + inf);
-        FileReader reader = null;
-        try {
-            reader = new FileReader(outputFile);
-        } catch (FileNotFoundException e3) {
-            return null;
-        }
-        BufferedReader br = new BufferedReader(reader);
-        for(int i = 0; i < 128; i++) {
-        	try {
-        		String temp = br.readLine();
-        		
-        		try {
-        			int weight = Integer.parseInt(temp.substring(temp.indexOf(",")+i));
-        			weights[i] = weight;
-        		}
-        		catch(NumberFormatException e) {
-        			return null;
-        		}
-        	}
-        	catch(IOException e) {
-        		break;
-        	}
-        }
+		FileReader reader = null;
+		try {
+			reader = new FileReader(outputFile);
+		} catch (FileNotFoundException e3) {
+			return null;
+		}
+		BufferedReader br = new BufferedReader(reader);
+		for(int i = 0; i < 128; i++) {
+			try {
+				String temp = br.readLine();
+
+				try {
+					int weight = Integer.parseInt(temp.substring(temp.indexOf(",")+i));
+					weights[i] = weight;
+				}
+				catch(NumberFormatException e) {
+					return null;
+				}
+			}
+			catch(IOException e) {
+				break;
+			}
+		}
 		return weights; 
 	}			
 
@@ -118,28 +118,26 @@ public class HuffmanCompressionUtilities {
 	 *     index 0 (the EOF character) to the queue
 	 */
 	void initializeHuffmanQueue(boolean minimize) {
+		weights[0] = 1;
 		for(int i = 0; i < weights.length; i++) {
-			if(!minimize) {
+			if(!minimize || weights[i] > 0) {
 				queue.add(new HuffmanTreeNode(i, weights[i]));
 			}
-			else {
-				if(weights[i] != 0) {
-					queue.add(new HuffmanTreeNode(i, weights[i]));
-				}
-			}
+			
 		}
+		dumpQueue("after initialization");
 	}
-	
+
 	/**
 	 * Sets the weights.
 	 *
 	 * @param weights the new weights
 	 */
 	public void setWeights(int[] weights) {
-		weights = this.weights;
-	
+		this.weights = weights;
+
 	}
-	
+
 	/**
 	 * Builds the huffman tree. Make sure to:
 	 * 1) initialize root to null (cleanup any prior conversions)
@@ -163,9 +161,9 @@ public class HuffmanCompressionUtilities {
 		HuffmanTreeNode left, right;
 		root = null;
 		encodeMap = new String[128];
-	
+		int counter = 0;
 		initializeHuffmanQueue(minimize);
-		dumpQueue("Dumping the Queue");
+		
 		while(queue.isEmpty() == false) {
 			left = queue.remove();
 			if(queue.isEmpty()) {
@@ -176,10 +174,13 @@ public class HuffmanCompressionUtilities {
 			//create and add to queue now
 			int tempWeight= left.getWeight() + right.getWeight();
 			queue.add(new HuffmanTreeNode(tempWeight, left, right));
+			dumpQueue("Dumping queue, Count =" + counter);
+			counter++;
 		}
 		
+
 	}
-	
+
 	/**
 	 * Prints the node info for debugging purposes
 	 *
@@ -194,9 +195,9 @@ public class HuffmanCompressionUtilities {
 		} else {
 			System.out.println("Level: "+level+ "   Ord: "+ord+"("+aChar+") = "+code);
 		}
-		
+
 	}
-	
+
 	/**
 	 * Creates the huffman codes. Starting at the root node, recursively traverse the tree to create 
 	 * the code. Moving to a left child adds "0" to the code, moving to the right child adds "1".
@@ -216,7 +217,7 @@ public class HuffmanCompressionUtilities {
 	public void recursiveCreate(HuffmanTreeNode node, String code, int level) {
 		if(node.isLeaf()) { //base case
 			encodeMap[node.getOrdValue()] = code;
-			
+
 		}
 		if(node.getLeft() != null) {
 			recursiveCreate(node.getLeft(), code+"0", level+1);
@@ -224,9 +225,9 @@ public class HuffmanCompressionUtilities {
 		if(node.getLeft() != null) {
 			recursiveCreate(node.getRight(), code+"1", level+1);
 		}
-		
+
 	}
-	
+
 	/**
 	 * Prints the huffman tree. for debugging purposes...
 	 *
@@ -237,11 +238,11 @@ public class HuffmanCompressionUtilities {
 		if (root == null) {
 			return;
 		} 
-		
+
 		if (level == 0) {
 			str = "";
 		}
-		
+
 		if (root.isLeaf()) {
 			if (root.getOrdValue() < 32) {
 				str += level+"l"+root.getOrdValue();
@@ -250,25 +251,25 @@ public class HuffmanCompressionUtilities {
 			}
 		} else {
 			str += level+"N";
- 
+
 			if ((root.getLeft() == null) && (root.getRight() == null)) {
 				return;
 			}
-		
+
 			str += ('(');
-		    printHuffmanTree(root.getLeft(),level+1);
-		    str += ')';
-		    
-		    if (root.getRight() != null) {
-		    	str += ('(');
-		    	printHuffmanTree(root.getRight(),level+1);
-		    	str += (')');
-		    }
-		
+			printHuffmanTree(root.getLeft(),level+1);
+			str += ')';
+
+			if (root.getRight() != null) {
+				str += ('(');
+				printHuffmanTree(root.getRight(),level+1);
+				str += (')');
+			}
+
 		}
-		
+
 	}
-	
+
 	/**
 	 * Traverse tree, based upon the passing in binary String. Note that
 	 * a String[] is used so that the code can manipulate the string. 
@@ -285,7 +286,7 @@ public class HuffmanCompressionUtilities {
 		//TODO - write this method
 		return -1; // remove when completed.
 	}
-	
+
 	/**
 	 * Decode string.
 	 * Algorithm:
@@ -312,9 +313,9 @@ public class HuffmanCompressionUtilities {
 		else {
 			return result;
 		}
-		
+
 	}
-		
+
 	/**
 	 * To string.
 	 *

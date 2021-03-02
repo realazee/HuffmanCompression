@@ -81,6 +81,10 @@ public class EncodeDecode {
 			gui.alert("c");
 			return;
 		}
+		weights = gw.readInputFileAndReturnWeights(freqWts);
+		huffUtil.setWeights(weights);
+		huffUtil.buildHuffmanTree(optimize);
+		
 	}
 	
 	/**
