@@ -67,11 +67,27 @@ public class BinaryIO {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	void convStrToBin(String inBinStr) throws IOException {
-		// TODO: Write this method
-		
-		while(inBinStr.length() >= 8) {
+		binStr = binStr + inBinStr;
+		byte output;
+		while(binStr.length() >= 8) {
+			output = convertToByteValue(binStr);	
+			binOutput.write(output);
+			binStr = binStr.substring(7);
+			
 			
 		}
+		
+	}
+	
+	public byte convertToByteValue(String binStr) {
+		byte dec = 0;
+		for(int i = 0; i < 8; i++) {
+			dec = (byte) (dec << 1);
+			if(binStr.charAt(i) == '1') {
+				dec++;
+			}
+		}
+		return dec;
 	}
 	
 	/**
