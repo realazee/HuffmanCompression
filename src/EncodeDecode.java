@@ -22,7 +22,7 @@ public class EncodeDecode {
 	private GenWeights gw;
 	
 	/** The bin util. This will be added in part 3 */
-	//private BinaryIO binUtil;
+	private BinaryIO binUtil;
 	
 	/** The input. */
 	private BufferedInputStream input;
@@ -67,23 +67,37 @@ public class EncodeDecode {
 	 */
 	void encode(String fName,String bfName, String freqWts, boolean optimize) {
 		File inFile = new File(fName);
-		
+		File outFile = new File(bfName);
 
 		if(fName.isEmpty()) {
 			gui.alert("a");
 			return;
 		}
-		else if(!inFile.exists() || fName.length() == 0) {
+		if(!inFile.exists() || fName.length() == 0) {
 			gui.alert("b");
 			return;
 		}
-		else if(!inFile.canRead()) {
+		if(!inFile.canRead()) {
 			gui.alert("c");
+			return;
+		}
+		if(bfName.isEmpty()) {
+			gui.alert("d");
+			return;
+		}
+		if(!outFile.exists() || bfName.length() == 0) {
+			gui.alert("e");
+			return;
+		}
+		if(!outFile.canWrite()) {
+			gui.alert("f");
 			return;
 		}
 		weights = gw.readInputFileAndReturnWeights(freqWts);
 		huffUtil.setWeights(weights);
 		huffUtil.buildHuffmanTree(optimize);
+		
+		executeEncode(inFile, outFile);
 		
 	}
 	
@@ -102,6 +116,19 @@ public class EncodeDecode {
 	 * @param binFile the File object that represents the compressed output file
 	 */
 	void executeEncode(File inFile, File binFile) {
+		String[] encodeMap = huffUtil.getEncodeMap();
+		String endOfFileString = "";
+		//not sure how to do step #2
+		
+		if(inFile.length() == 0) {
+			try {
+				binUtil.writeEOF(endOfFileString);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		
 	}
 	
 	/**

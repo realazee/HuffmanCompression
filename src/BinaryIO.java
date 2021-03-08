@@ -70,16 +70,16 @@ public class BinaryIO {
 		binStr = binStr + inBinStr;
 		byte output;
 		while(binStr.length() >= 8) {
-			output = convertToByteValue(binStr);	
+			output = convertToByteValue();	
 			binOutput.write(output);
-			binStr = binStr.substring(7);
+			binStr = binStr.substring(8);
 			
 			
 		}
 		
 	}
 	
-	public byte convertToByteValue(String binStr) {
+	public byte convertToByteValue() {
 		byte dec = 0;
 		for(int i = 0; i < 8; i++) {
 			dec = (byte) (dec << 1);
@@ -118,7 +118,17 @@ public class BinaryIO {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	void writeEOF(String EOF_binStr) throws IOException {
-		// TODO: write this method
+		try {
+		binStr += EOF_binStr;
+		while(binStr.length()%8 != 0) {
+			binStr += "0";	
+		}
+		convStrToBin(binStr);
+		binStr = "";
+		binOutput.flush();
+		} catch(IOException e) {
+			System.out.println("an IO Exeception has occured");
+		}
 		
 		
 	}
