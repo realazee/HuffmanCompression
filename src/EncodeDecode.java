@@ -1,6 +1,8 @@
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 
 // TODO: Auto-generated Javadoc
@@ -8,31 +10,31 @@ import java.io.IOException;
  * The Class EncodeDecode. This is the controller of the Huffman project...
  */
 public class EncodeDecode {
-	
+
 	/** The encode map. */
 	private String[] encodeMap;
-	
+
 	/** The huff util. */
 	private HuffmanCompressionUtilities huffUtil;
-	
+
 	/** The gui. */
 	private EncodeDecodeGUI gui;
-	
+
 	/** The gw.  This is used to generate the frequency weights if no weights file is specified */
 	private GenWeights gw;
-	
+
 	/** The bin util. This will be added in part 3 */
 	private BinaryIO binUtil;
-	
+
 	/** The input. */
 	private BufferedInputStream input;
-	
+
 	/** The output. */
 	private BufferedOutputStream output;
-	
+
 	/** The array for storing the frequency weights*/
 	private int[] weights;
-	
+
 	/**
 	 * Instantiates a new encode decode.
 	 *
@@ -44,7 +46,7 @@ public class EncodeDecode {
 		//binUtil = new BinaryIO();
 		gw = new GenWeights();
 	}
-	
+
 	/**
 	 * Encode. This function will do the following actions:
 	 *         1) Error check the inputs
@@ -96,11 +98,11 @@ public class EncodeDecode {
 		weights = gw.readInputFileAndReturnWeights(freqWts);
 		huffUtil.setWeights(weights);
 		huffUtil.buildHuffmanTree(optimize);
-		
+
 		executeEncode(inFile, outFile);
-		
+
 	}
-	
+
 	/**
 	 * Execute encode. This function will write compressed binary file as part of part 3
 	 * 
@@ -117,20 +119,31 @@ public class EncodeDecode {
 	 */
 	void executeEncode(File inFile, File binFile) {
 		String[] encodeMap = huffUtil.getEncodeMap();
-		String endOfFileString = "";
-		//not sure how to do step #2
-		
-		if(inFile.length() == 0) {
-			try {
-				binUtil.writeEOF(endOfFileString);
-			} catch (IOException e) {
-				e.printStackTrace();
+		String binaryString = "";
+		try(BufferedReader br = new BufferedReader(new FileReader(inFile))) {
+			int curr = br.read();
+			while(curr != -1) {
+				curr = curr&0x7f;
+				binaryString += encodeMap[curr];
 			}
+
+			binUtil.openOutputFile(binFile);
+
+			while(binaryString.length() >= 8) {
+				binUtil.convStrToBin(binaryString);
+				
+			}
+			binUtil.writeEOF(binaryString);
+
+		} catch(IOException e) {
+			e.printStackTrace();
 		}
-		
-		
+
+
+
+
 	}
-	
+
 	/**
 	 * Decode. This function will only be addressed in part 3. It will 
 	 *         1) Error check the inputs
@@ -150,7 +163,7 @@ public class EncodeDecode {
 	 */
 	void decode(String bfName, String ofName, String freqWts,boolean optimize) {
 	}
-	
+
 	/**
 	 * Execute decode.  - This is part of PART3...
 	 * This function performs the decode of the binary(compressed) file.
@@ -168,5 +181,5 @@ public class EncodeDecode {
 	 */
 	void executeDecode(File binFile, File outFile) throws IOException {
 	}
-	
+
 }
