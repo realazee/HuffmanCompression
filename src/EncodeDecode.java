@@ -2,6 +2,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -43,7 +44,7 @@ public class EncodeDecode {
 	public EncodeDecode (EncodeDecodeGUI gui) {
 		this.gui = gui;
 		huffUtil = new HuffmanCompressionUtilities();
-		//binUtil = new BinaryIO();
+		binUtil = new BinaryIO();
 		gw = new GenWeights();
 	}
 
@@ -68,8 +69,14 @@ public class EncodeDecode {
 	 * @param optimize the optimize
 	 */
 	void encode(String fName,String bfName, String freqWts, boolean optimize) {
-		File inFile = new File(fName);
-		File outFile = new File(bfName);
+
+
+		File inFile = new File("data/" + fName);
+		File outFile = new File("output/" + bfName);
+		File weightsFile = new File("output/" + freqWts);
+		weights = huffUtil.readFreqWeights(weightsFile);
+
+
 
 		if(fName.isEmpty()) {
 			gui.alert("a");
@@ -87,21 +94,20 @@ public class EncodeDecode {
 			gui.alert("d");
 			return;
 		}
-		if(!outFile.exists() || bfName.length() == 0) {
-			gui.alert("e");
-			return;
-		}
-		if(!outFile.canWrite()) {
+
+		if(!outFile.canWrite() && outFile.exists()) {
 			gui.alert("f");
 			return;
 		}
-		weights = gw.readInputFileAndReturnWeights(freqWts);
+
 		huffUtil.setWeights(weights);
 		huffUtil.buildHuffmanTree(optimize);
 
 		executeEncode(inFile, outFile);
 
 	}
+
+
 
 	/**
 	 * Execute encode. This function will write compressed binary file as part of part 3
@@ -121,19 +127,19 @@ public class EncodeDecode {
 		String[] encodeMap = huffUtil.getEncodeMap();
 		String binaryString = "";
 		try(BufferedReader br = new BufferedReader(new FileReader(inFile))) {
-			int curr = br.read();
-			while(curr != -1) {
-				curr = curr&0x7f;
-				binaryString += encodeMap[curr];
-			}
-
+			int curr = 0;
 			binUtil.openOutputFile(binFile);
-
-			while(binaryString.length() >= 8) {
-				binUtil.convStrToBin(binaryString);
-				
+			while(curr != -1) {
+				curr = br.read();
+				//System.out.println("is it stuck here? " + curr);
+				if(curr != -1) {
+					binaryString += encodeMap[curr];	
+				}
 			}
-			binUtil.writeEOF(binaryString);
+			binUtil.convStrToBin(binaryString);
+
+			
+			binUtil.writeEOF(encodeMap[0]);
 
 		} catch(IOException e) {
 			e.printStackTrace();

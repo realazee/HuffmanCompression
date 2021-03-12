@@ -83,12 +83,12 @@ public class HuffmanCompressionUtilities {
 	 */
 
 	public int[] readFreqWeights(File inf) {
-		File outputFile = new File("output/" + inf);
+	
 		FileReader reader = null;
 		try {
-			reader = new FileReader(outputFile);
-		} catch (FileNotFoundException e3) {
-			return null;
+			reader = new FileReader(inf);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 		}
 		BufferedReader br = new BufferedReader(reader);
 		for(int i = 0; i < 128; i++) {
@@ -96,15 +96,15 @@ public class HuffmanCompressionUtilities {
 				String temp = br.readLine();
 
 				try {
-					int weight = Integer.parseInt(temp.substring(temp.indexOf(",")+i));
+					int weight = Integer.parseInt(temp.substring(temp.indexOf(",")+1, temp.length()-1));
 					weights[i] = weight;
 				}
 				catch(NumberFormatException e) {
-					return null;
+					e.printStackTrace();
 				}
 			}
 			catch(IOException e) {
-				break;
+				e.printStackTrace();
 			}
 		}
 		return weights; 
