@@ -102,6 +102,7 @@ public class EncodeDecode {
 
 		huffUtil.setWeights(weights);
 		huffUtil.buildHuffmanTree(optimize);
+		huffUtil.createHuffmanCodes(huffUtil.getTreeRoot());
 
 		executeEncode(inFile, outFile);
 
@@ -133,12 +134,11 @@ public class EncodeDecode {
 				curr = br.read();
 				//System.out.println("is it stuck here? " + curr);
 				if(curr != -1) {
-					binaryString += encodeMap[curr];	
+					binaryString = encodeMap[curr];	
 				}
+				binUtil.convStrToBin(binaryString);
+				
 			}
-			binUtil.convStrToBin(binaryString);
-
-			
 			binUtil.writeEOF(encodeMap[0]);
 
 		} catch(IOException e) {

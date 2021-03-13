@@ -123,7 +123,7 @@ public class BinaryIO {
 		while(binStr.length()%8 != 0) {
 			binStr += "0";	
 		}
-		convStrToBin(binStr);
+		convStrToBin("");
 		binStr = "";
 		binOutput.flush();
 		} catch(IOException e) {
