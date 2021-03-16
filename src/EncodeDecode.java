@@ -168,6 +168,45 @@ public class EncodeDecode {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	void decode(String bfName, String ofName, String freqWts,boolean optimize) {
+
+		File inFile = new File("data/" + bfName);
+		File outFile = new File("output/" + ofName);
+		File weightsFile = new File("output/" + freqWts);
+		weights = huffUtil.readFreqWeights(weightsFile);
+
+
+
+		if(bfName.isEmpty()) {
+			gui.alert("a");
+			return;
+		}
+		if(!inFile.exists() || bfName.length() == 0) {
+			gui.alert("b");
+			return;
+		}
+		if(!inFile.canRead()) {
+			gui.alert("c");
+			return;
+		}
+		if(ofName.isEmpty()) {
+			gui.alert("d");
+			return;
+		}
+
+		if(!outFile.canWrite() && outFile.exists()) {
+			gui.alert("f");
+			return;
+		}
+		huffUtil.setWeights(weights);
+		huffUtil.buildHuffmanTree(optimize);
+		huffUtil.createHuffmanCodes(huffUtil.getTreeRoot());
+		try {
+			executeDecode(inFile, outFile);
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+		} 
+		
 	}
 
 	/**
@@ -186,6 +225,7 @@ public class EncodeDecode {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	void executeDecode(File binFile, File outFile) throws IOException {
+		
 	}
 
 }
