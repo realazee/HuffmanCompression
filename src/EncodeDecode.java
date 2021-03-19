@@ -169,7 +169,7 @@ public class EncodeDecode {
 	 */
 	void decode(String bfName, String ofName, String freqWts,boolean optimize) {
 
-		File inFile = new File("data/" + bfName);
+		File inFile = new File("output/" + bfName);
 		File outFile = new File("output/" + ofName);
 		File weightsFile = new File("output/" + freqWts);
 		weights = huffUtil.readFreqWeights(weightsFile);
@@ -202,10 +202,14 @@ public class EncodeDecode {
 		huffUtil.createHuffmanCodes(huffUtil.getTreeRoot());
 		try {
 			executeDecode(inFile, outFile);
+			output.flush();
+			output.close();
 		} catch (IOException e) {
 			
 			e.printStackTrace();
 		} 
+		
+		
 		
 	}
 
@@ -225,7 +229,29 @@ public class EncodeDecode {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	void executeDecode(File binFile, File outFile) throws IOException {
-		
+		String[] encodeMap = huffUtil.getEncodeMap();
+		input = binUtil.openInputFile(binFile);
+		output = binUtil.openOutputFile(outFile);
+		boolean isEndOfFile = false;
+		byte curr;
+		byte decoded;
+		String str = "";
+		while(!isEndOfFile) {
+			curr = (byte)input.read();
+			str += binUtil.convBinToStr(curr);
+			while((decoded = huffUtil.decodeString(str)) != -1) {
+				if(decoded == 0) {
+					isEndOfFile = true;
+				}
+				if(!isEndOfFile) {
+					output.write((char)decoded);
+					str = str.substring(encodeMap[decoded].length());
+				}
+				else {
+					break;
+				}
+			}
+		}
 	}
 
 }

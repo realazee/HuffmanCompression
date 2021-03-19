@@ -282,9 +282,24 @@ public class HuffmanCompressionUtilities {
 	 * @param binStr the bin str
 	 * @return the byte
 	 */
-	private byte traverseTree(HuffmanTreeNode root, String[] binStr) {
-		//TODO - write this method
-		return -1; // remove when completed.
+	private byte traverseTree(HuffmanTreeNode root, String binStr) {
+		if(root.isLeaf()) { //base case
+			return ((byte) root.getOrdValue());
+		}
+		else if(binStr.length() ==0){
+			return ((byte)-1);
+		}
+		else {
+			HuffmanTreeNode nextNode;
+			if(binStr.charAt(0) == '0') {
+				nextNode = root.getLeft();
+			}
+			else {
+				nextNode = root.getRight();
+				
+			}
+			return traverseTree(nextNode, binStr.substring(1));
+		}
 	}
 
 	/**
@@ -299,15 +314,15 @@ public class HuffmanCompressionUtilities {
 	 * @param binStr the bin str
 	 * @return the byte
 	 */
-	public byte decodeString(String[] binStr) {
+	public byte decodeString(String binStr) {
 		//TODO - write this method
-		if(binStr.length == 0) {
+		if(binStr.length() == 0) {
 			return -1;
 		}
-		String[] backup = binStr;
+	
 		byte result = traverseTree(root, binStr);
 		if(result == -1) {
-			binStr = backup;
+			
 			return -1;
 		}
 		else {
