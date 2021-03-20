@@ -208,10 +208,10 @@ public class HuffmanCompressionUtilities {
 	 * @param code the code
 	 * @param level the level
 	 */
-	public void createHuffmanCodes(HuffmanTreeNode node) {
+	public void createHuffmanCodes(HuffmanTreeNode node, String code, int level) {
 		encodeMap = new String[128];
 		if(root != null) {
-			recursiveCreate(root, "", 0);
+			recursiveCreate(root, code, level);
 		}
 	}
 	public void recursiveCreate(HuffmanTreeNode node, String code, int level) {

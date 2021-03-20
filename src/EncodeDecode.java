@@ -102,7 +102,7 @@ public class EncodeDecode {
 
 		huffUtil.setWeights(weights);
 		huffUtil.buildHuffmanTree(optimize);
-		huffUtil.createHuffmanCodes(huffUtil.getTreeRoot());
+		huffUtil.createHuffmanCodes(huffUtil.getTreeRoot(), "", 0);
 
 		executeEncode(inFile, outFile);
 
@@ -199,7 +199,7 @@ public class EncodeDecode {
 		}
 		huffUtil.setWeights(weights);
 		huffUtil.buildHuffmanTree(optimize);
-		huffUtil.createHuffmanCodes(huffUtil.getTreeRoot());
+		huffUtil.createHuffmanCodes(huffUtil.getTreeRoot(), "", 0);
 		try {
 			executeDecode(inFile, outFile);
 			output.flush();
