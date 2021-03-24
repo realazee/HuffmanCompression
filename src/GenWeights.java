@@ -225,12 +225,12 @@ public class GenWeights extends Application {
 		}
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 		alert.setContentText("The file is writable, confirm to proceed.");
-		alert.show();
-		if(alert.getResult() == ButtonType.NO){
-			return;
+		alert.showAndWait();
+		if(alert.getResult() == ButtonType.OK){
+			writeOutputToFile(outfName);
 		}
 		else {
-			writeOutputToFile(outfName);
+			return;
 		}
 		
 		

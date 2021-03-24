@@ -70,7 +70,16 @@ public class EncodeDecode {
 	 */
 	void encode(String fName,String bfName, String freqWts, boolean optimize) {
 
-
+		if(fName.isEmpty()) {
+			//System.out.println("bruhhhhhhhhhhhhhh");
+			gui.alert("a");
+			return;
+		}
+		if(bfName.isEmpty()) {
+			//System.out.println("bruhhhhhhhhhhhhhh");
+			gui.alert("d");
+			return;
+		}
 		File inFile = new File("data/" + fName);
 		File outFile = new File("output/" + bfName);
 		File weightsFile = new File("output/" + freqWts);
@@ -78,24 +87,21 @@ public class EncodeDecode {
 
 
 
-		if(fName.isEmpty()) {
-			gui.alert("a");
-			return;
-		}
+		
 		if(!inFile.exists() || fName.length() == 0) {
+			//System.out.println("bruhhhhhhhhhhhhhh");
 			gui.alert("b");
 			return;
 		}
 		if(!inFile.canRead()) {
+			//System.out.println("bruhhhhhhhhhhhhhh");
 			gui.alert("c");
 			return;
 		}
-		if(bfName.isEmpty()) {
-			gui.alert("d");
-			return;
-		}
+		
 
 		if(!outFile.canWrite() && outFile.exists()) {
+			//System.out.println("bruhhhhhhhhhhhhhh");
 			gui.alert("f");
 			return;
 		}
@@ -134,7 +140,12 @@ public class EncodeDecode {
 				curr = br.read();
 				//System.out.println("is it stuck here? " + curr);
 				if(curr != -1) {
+					try {
 					binaryString = encodeMap[curr];	
+					}
+					catch(ArrayIndexOutOfBoundsException e){
+						continue;
+					}
 				}
 				binUtil.convStrToBin(binaryString);
 				
@@ -169,17 +180,19 @@ public class EncodeDecode {
 	 */
 	void decode(String bfName, String ofName, String freqWts,boolean optimize) {
 
+		if(bfName.isEmpty()) {
+			gui.alert("a");
+			return;
+		}
+		if(ofName.isEmpty()) {
+			gui.alert("d");
+			return;
+		}
 		File inFile = new File("output/" + bfName);
 		File outFile = new File("output/" + ofName);
 		File weightsFile = new File("output/" + freqWts);
 		weights = huffUtil.readFreqWeights(weightsFile);
 
-
-
-		if(bfName.isEmpty()) {
-			gui.alert("a");
-			return;
-		}
 		if(!inFile.exists() || bfName.length() == 0) {
 			gui.alert("b");
 			return;
@@ -188,10 +201,7 @@ public class EncodeDecode {
 			gui.alert("c");
 			return;
 		}
-		if(ofName.isEmpty()) {
-			gui.alert("d");
-			return;
-		}
+		
 
 		if(!outFile.canWrite() && outFile.exists()) {
 			gui.alert("f");
