@@ -87,7 +87,7 @@ public class EncodeDecode {
 
 
 
-		
+
 		if(!inFile.exists() || fName.length() == 0) {
 			//System.out.println("bruhhhhhhhhhhhhhh");
 			gui.alert("b");
@@ -98,7 +98,7 @@ public class EncodeDecode {
 			gui.alert("c");
 			return;
 		}
-		
+
 
 		if(!outFile.canWrite() && outFile.exists()) {
 			//System.out.println("bruhhhhhhhhhhhhhh");
@@ -110,7 +110,10 @@ public class EncodeDecode {
 		huffUtil.buildHuffmanTree(optimize);
 		huffUtil.createHuffmanCodes(huffUtil.getTreeRoot(), "", 0);
 
+
+
 		executeEncode(inFile, outFile);
+
 
 	}
 
@@ -140,15 +143,16 @@ public class EncodeDecode {
 				curr = br.read();
 				//System.out.println("is it stuck here? " + curr);
 				if(curr != -1) {
-					try {
+					//try {
 					binaryString = encodeMap[curr];	
-					}
-					catch(ArrayIndexOutOfBoundsException e){
-						continue;
-					}
+					//}
+					//catch(ArrayIndexOutOfBoundsException e){
+					//	continue;
+					//}
+					binUtil.convStrToBin(binaryString);
 				}
-				binUtil.convStrToBin(binaryString);
-				
+
+
 			}
 			binUtil.writeEOF(encodeMap[0]);
 
@@ -201,7 +205,7 @@ public class EncodeDecode {
 			gui.alert("c");
 			return;
 		}
-		
+
 
 		if(!outFile.canWrite() && outFile.exists()) {
 			gui.alert("f");
@@ -212,15 +216,14 @@ public class EncodeDecode {
 		huffUtil.createHuffmanCodes(huffUtil.getTreeRoot(), "", 0);
 		try {
 			executeDecode(inFile, outFile);
-			output.flush();
-			output.close();
+
 		} catch (IOException e) {
-			
+
 			e.printStackTrace();
 		} 
-		
-		
-		
+
+
+
 	}
 
 	/**
@@ -262,6 +265,8 @@ public class EncodeDecode {
 				}
 			}
 		}
+		output.flush();
+		output.close();
 	}
 
 }

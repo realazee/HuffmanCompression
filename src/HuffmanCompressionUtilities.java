@@ -84,6 +84,23 @@ public class HuffmanCompressionUtilities {
 
 	public int[] readFreqWeights(File inf) {
 	
+		try (BufferedReader br = new BufferedReader(new FileReader(inf))) {
+			String line;
+			br.readLine();
+			int i=0;
+			while ((line = br.readLine())!= null) {
+				String[] values = line.split(",");
+				System.out.println(i);
+				i++;
+				weights[i] = (Integer.parseInt(values[1]));
+				//System.out.println(building.passQ.toString());
+				// use values to construct the passenger...
+			}
+		} catch (IOException e) { 
+			e.printStackTrace();
+		}
+		return weights;
+		/*
 		FileReader reader = null;
 		try {
 			reader = new FileReader(inf);
@@ -100,6 +117,7 @@ public class HuffmanCompressionUtilities {
 					weights[i] = weight;
 				}
 				catch(NumberFormatException e) {
+					System.out.println(temp.substring(temp.indexOf(",")+1, temp.length()-1));
 					e.printStackTrace();
 				}
 			}
@@ -108,6 +126,7 @@ public class HuffmanCompressionUtilities {
 			}
 		}
 		return weights; 
+		*/
 	}			
 
 	/**
